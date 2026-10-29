@@ -1,5 +1,6 @@
 package com.gathin.tvhome;
 
+import android.os.Build;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +21,7 @@ public class GuardRevival extends NotificationListenerService {
     @Override
     public void onListenerConnected() {
         UserManager users = getSystemService(UserManager.class);
-        if (users != null && !users.isUserUnlocked()) {
+        if (Build.VERSION.SDK_INT >= 24 && users != null && !users.isUserUnlocked()) {
             if (unlocked != null) return;
             unlocked = new BroadcastReceiver() {
                 @Override

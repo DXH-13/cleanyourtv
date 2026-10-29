@@ -1,5 +1,6 @@
 package com.gathin.tvhome;
 
+import android.os.Build;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -293,6 +294,7 @@ final class WallpaperPlayer {
             if (dimColor != 0) new Canvas(decoded).drawColor(dimColor);
             // One copy in GPU memory instead of a software bitmap plus its texture; the decode stays off the UI
             // thread for rotations, and Home's return no longer uploads 4-8 MB to the GPU.
+            if (Build.VERSION.SDK_INT < 26) return decoded;
             Bitmap gpu = decoded.copy(Bitmap.Config.HARDWARE, false);
             if (gpu == null) return decoded;
             decoded.recycle();

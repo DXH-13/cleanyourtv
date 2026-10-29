@@ -102,7 +102,7 @@ public class HomeKeyService extends AccessibilityService {
         // locked at boot, writes accessibility_enabled=0 and, on TCL G03 firmware, never binds it after the
         // unlock. Config.load reads credential-protected storage, so wait for the unlock before reading it.
         UserManager users = getSystemService(UserManager.class);
-        if (users.isUserUnlocked()) {
+        if (Build.VERSION.SDK_INT < 24 || users.isUserUnlocked()) {
             loadConfig();
             return;
         }
@@ -115,7 +115,7 @@ public class HomeKeyService extends AccessibilityService {
         };
         registerReceiver(unlockReceiver, new IntentFilter(Intent.ACTION_USER_UNLOCKED));
         // The unlock may have happened between the check and the registration.
-        if (users.isUserUnlocked()) {
+        if (Build.VERSION.SDK_INT >= 24 && users.isUserUnlocked()) {
             stopWaitingForUnlock();
             loadConfig();
         }

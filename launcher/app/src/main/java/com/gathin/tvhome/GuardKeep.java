@@ -1,5 +1,6 @@
 package com.gathin.tvhome;
 
+import android.os.Build;
 import android.Manifest;
 import android.accessibilityservice.AccessibilityService;
 import android.content.BroadcastReceiver;
@@ -36,7 +37,7 @@ final class GuardKeep {
 
     static boolean offInStandby(Context context) {
         UserManager users = context.getSystemService(UserManager.class);
-        if (users != null && !users.isUserUnlocked()) return false;
+        if (Build.VERSION.SDK_INT >= 24 && users != null && !users.isUserUnlocked()) return false;
         return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).getBoolean(KEY_OFF, false);
     }
 
@@ -86,7 +87,7 @@ final class GuardKeep {
     /** Drops the service from the list and puts it back on the next SCREEN_ON. The process has to stay up. */
     static void stepOut(AccessibilityService service) {
         watchScreenOn(service.getApplicationContext());
-        service.disableSelf();
+        if (Build.VERSION.SDK_INT >= 24) service.disableSelf();
     }
 
     private static void watchScreenOn(Context app) {
